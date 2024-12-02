@@ -65,12 +65,17 @@ var productModal = $("#productModal");
     productModal.on('show.bs.modal', function(){
         //JSON data by API call
         $.get(uomListApiUrl, function (response) {
+            console.log(response);
             if(response) {
                 var options = '<option value="">--Select--</option>';
                 $.each(response, function(index, uom) {
                     options += '<option value="'+ uom.uom_id +'">'+ uom.uom_name +'</option>';
                 });
                 $("#uoms").empty().html(options);
+            } else {
+                console.error("No response data received for UOMs.");
             }
+        }).fail(function() {
+            console.error("Error fetching UOMs from the API.");
         });
     });

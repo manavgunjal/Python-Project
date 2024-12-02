@@ -2,7 +2,18 @@ from sql_connection import get_sql_connection
 
 def get_all_products(connection):
     cursor = connection.cursor()
-    query = ("select products.product_id, products.name, products.uom_id, products.price_per_unit, uom.uom_name from products inner join uom on products.uom_id=uom.uom_id")
+    query = """
+    SELECT 
+        p.product_id, 
+        p.name AS product_name, 
+        p.uom_id, 
+        p.price_per_unit, 
+        u.uom_name 
+    FROM 
+        products AS p 
+    INNER JOIN 
+        uom AS u ON p.uom_id = u.uom_id
+    """
     cursor.execute(query)
     response = []
     for (product_id, name, uom_id, price_per_unit, uom_name) in cursor:
@@ -13,6 +24,7 @@ def get_all_products(connection):
             'price_per_unit': price_per_unit,
             'uom_name': uom_name
         })
+    cursor.close()
     return response
 
 def insert_new_product(connection, product):
